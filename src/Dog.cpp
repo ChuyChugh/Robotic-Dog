@@ -1,16 +1,7 @@
 #include <math.h>
 #include <ODriveArduino.h>
-#include "ODrive.h"
+#include "Dog.h"
 
-template<class T> inline Print& operator <<(Print& obj, T arg){ 
-    obj.print(arg);   
-    return obj; 
-}
-
-template<> inline Print& operator <<(Print& obj, float arg){ 
-    obj.print(arg, 4); 
-    return obj; 
-}
 Dog::Dog(ODriveArduino frontLeft, ODriveArduino frontRight, ODriveArduino backLeft, ODriveArduino backRight):
     fL(frontLeft),
     fR(frontRight),
@@ -21,19 +12,11 @@ Dog::Dog(ODriveArduino frontLeft, ODriveArduino frontRight, ODriveArduino backLe
 
 double axis::set_axis0(double x, double y){
     double numerator = square(l1)+square(x) +square(y)-square(l2), denominator = 2 * l1 * hypot(x,y), result = 0;
-    double* n_pointer = &numerator, *d_pointer = &denominator;
-    result = (acos(x/hypot(x,y)) - acos(numerator/denominator))/2/PI * encoder_cpr * ratio;
-    delete n_pointer;
-    delete d_pointer;
-    return result;
+    return (acos(x/hypot(x,y)) - acos(numerator/denominator))/2/PI * encoder_cpr * ratio;
 }
 double axis::set_axis1(double x, double y){
     double numerator = square(l1)-square(x) -square(y)+square(l2), denominator = 2 * l1 * l2, result = 0;
-    double* n_pointer = &numerator, *d_pointer = &denominator;
-    result = PI/2 - acos((*n_pointer)/(*d_pointer)) /2/PI * encoder_cpr * ratio;
-    delete n_pointer;
-    delete d_pointer;
-    return result;
+    return PI/2 - acos((numerator/denominator)) /2/PI * encoder_cpr * ratio;
 }
 void Dog::walk_indefinitely(double increment){
 
