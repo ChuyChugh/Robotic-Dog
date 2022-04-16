@@ -19,7 +19,6 @@ template<>        inline Print& operator <<(Print &obj, float arg) { obj.print(a
 
 SoftwareSerial odrive1_serial(8,9);
 ODriveArduino odrive1(odrive1_serial);
-
 SPEED speed;
 String choice;
 
@@ -38,6 +37,7 @@ namespace Axis{
     return PI/2 - acos((numerator/denominator)) /2/PI * cpr * ratio;
   }
 }
+
 void setup() {
   odrive1_serial.begin(115200);
   Serial.begin(115200);
@@ -53,7 +53,7 @@ void setup() {
   while(speed == nullptr){
     if(Serial.readString().substring(2,3).equals("0")){
       speed = SPEED::FAST;
-    }else if (Serial.readString().substring(2,3).equals("0")){
+    }else if (Serial.readString().substring(2,3).equals("1")){
       speed = SPEED::SLOW;
     }else{
       Serial.println("Try again");
@@ -102,12 +102,12 @@ void loop() {
   if(choice.equals("1")){
     Serial.println("Type in either up or down to set the microphone up or down ");
         if(Serial.readString().equals("up")){
-          odrive1.SetPosition(0, Axis::set_axis0(up_x_position, up_y_position));
-          odrive1.SetPosition(1, Axis::set_axis1(up_x_position, up_y_position));
+          odrive1.SetPosition(0, Axis::set_axis0(up_x_position, up_y_position),15);
+          odrive1.SetPosition(1, Axis::set_axis1(up_x_position, up_y_position), 15);
         }
         if(Serial.readString().equals("down")){
-          odrive1.SetPosition(0, Axis::set_axis0(down_x_position, down_y_position));
-          odrive1.SetPosition(1, Axis::set_axis1(down_x_position, down_y_position));
+          odrive1.SetPosition(0, Axis::set_axis0(down_x_position, down_y_position), 15);
+          odrive1.SetPosition(1, Axis::set_axis1(down_x_position, down_y_position), 15);
         }
     }
 }
