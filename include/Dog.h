@@ -37,9 +37,6 @@
 #define ratio 10
 #endif
 
-template<class T> inline Print& operator <<(Print& obj, T arg);
-template<> inline Print& operator <<(Print& obj, float arg);
-
 namespace axis{
   double set_axis0(double x, double y);
   double set_axis1(double x, double y);
