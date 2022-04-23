@@ -19,14 +19,14 @@ template<>        inline Print& operator <<(Print &obj, float arg) { obj.print(a
 
 SoftwareSerial odrive1_serial(8,9);
 ODriveArduino odrive1(odrive1_serial);
-SPEED speed;
+
 String choice;
 
 enum class SPEED{
   SLOW,
   FAST
 };
-
+SPEED speed;
 namespace Axis{
   float set_axis0(double x, double y){
     float numerator = square(l1)+square(x) +square(y)-square(l2), denominator = 2 * l1 * hypot(x,y), result = 0;
@@ -49,25 +49,14 @@ void setup() {
     Serial.println("Hello. Type a command to choose the setup/position control and speed");
     Serial.println("Make sure you type to integers that go from 0 to 1");
   }
-  choice = Serial.readString().substring(0,1);
-  while(speed == nullptr){
-    if(Serial.readString().substring(2,3).equals("0")){
-      speed = SPEED::FAST;
-    }else if (Serial.readString().substring(2,3).equals("1")){
-      speed = SPEED::SLOW;
-    }else{
-      Serial.println("Try again");
-    }
-  }
-}
-
-void loop() {
-  if(choice.equals("0")){
-    Serial.println("Ready!");
+  Serial.println("Ready!");
     Serial.println("Send the character '0' or '1' to calibrate respective motor (you must do this before you can command movement)");
     Serial.println("Send the character 's' to exectue test move");
     Serial.println("Send the character 'b' to read bus voltage");
     Serial.println("Send the character 'p' to do a spinning test");
+}
+void loop(){
+    
     char character = Serial.read();
 
     if(character == '0' || character == 'l'){
@@ -99,15 +88,4 @@ void loop() {
       delay(5000);
     }
   }
-  if(choice.equals("1")){
-    Serial.println("Type in either up or down to set the microphone up or down ");
-        if(Serial.readString().equals("up")){
-          odrive1.SetPosition(0, Axis::set_axis0(up_x_position, up_y_position),15);
-          odrive1.SetPosition(1, Axis::set_axis1(up_x_position, up_y_position), 15);
-        }
-        if(Serial.readString().equals("down")){
-          odrive1.SetPosition(0, Axis::set_axis0(down_x_position, down_y_position), 15);
-          odrive1.SetPosition(1, Axis::set_axis1(down_x_position, down_y_position), 15);
-        }
-    }
-}
+
